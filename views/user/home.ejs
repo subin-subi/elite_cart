@@ -1,0 +1,462 @@
+<%-include("../../views/partials/nav")%>
+
+<div class="hero-box"> <!-- Added a wrapper box -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="brand-name">ELITECART</h1>
+            <p class="tagline">"A lamp is more than just light! <br> It is a storyteller of warmth and dreams..."</p>
+        </div>
+    </header>
+</div>
+    <!--Best selling books -->
+<section class="best-selling">
+    <div class="text-content">
+        <h2>Light Up Life<br> <span>With Elegance</span></h2>
+        <p>Brighten every corner with stunning designs—explore our collection of wall, table, and ceiling lamps that bring warmth and style to your home! ✨</p>
+        <a href="#" class="btn">Discover More →</a>
+    </div>
+    
+
+    <div class="books-container">
+        <div class="book">
+            <div class="book-img">
+                <img src="/images/table2.jpg" alt="table lamp">
+            </div>
+            <p>Table Lamps</p>
+        </div>
+        <div class="book">
+            <div class="book-img">
+                <img src="/images/wall2.jpg" alt="wall lamp ">
+            </div>
+            <p>Wall Lamps</p>
+        </div>
+        <div class="book">
+            <div class="book-img">
+                <img src="/images/celing1.jpg" alt="ceiling lamp">
+            </div>
+            <p>Ceiling Lamps</p>
+        </div>
+    </div>
+</section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <h2>Categories</h2>
+        <p class="subheading">Find what you are looking for</p>
+        <div class="category-container">
+            <div class="category">
+                <div class="category-card">
+                    <img src="/images/celing3.jpg" alt="ceiling lamp">
+                </div>
+                <p>Ceiling Lamps</p>
+            </div>
+            <div class="category">
+                <div class="category-card">
+                    <img src="/images/wall3.jpg" alt="wall lamp">
+                </div>
+                <p>Wall Lamps</p>
+            </div>
+            <div class="category">
+                <div class="category-card">
+                    <img src="/images/table1.jpg" alt="table lamp">
+                </div>
+                <p>Table Lamps </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us -->
+    <section class="about-us">
+        <h2>About us</h2>
+        <p class="subheading">Order now and appreciate the beauty of nature</p>
+        <div class="features">
+            <div class="feature">
+                <div class="icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <h3>Fast & Free Shipping</h3>
+                <p>4-day or less delivery time, free shipping and an expedited delivery option.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Answers to any business-related inquiry 24/7 and in real-time.</p>
+            </div>
+        </div>
+        <style>
+            /* Hero Section */
+
+            .hero-box {
+  background: url('images/baner.jpg') no-repeat center center;
+  background-size: cover;
+  width: 100vw; /* Full width of the viewport */
+  height: 600px; /* Adjust height as needed */
+  padding: 50px;
+  border-radius: 0; /* Remove border-radius for full width */
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  color:    white; /* Ensures text is visible over the background */
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 90px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #fdfdfd; /* White for premium feel */
+    text-shadow: 4px 4px 15px rgba(255, 204, 0, 0.8); /* Stronger glow effect */
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .brand-name {
+        font-size: 70px;
+        letter-spacing: 4px;
+    }
+}
+
+@media (max-width: 992px) {
+    .brand-name {
+        font-size: 60px;
+        letter-spacing: 3px;
+    }
+}
+
+@media (max-width: 768px) {
+    .brand-name {
+        font-size: 50px;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-name {
+        font-size: 40px;
+        letter-spacing: 1px;
+    }
+}
+
+.tagline {
+    font-size: 34px; /* Slightly larger for emphasis */
+    font-weight: 600; /* Bolder for stronger impact */
+    margin-top: 15px;
+    color: #ffffff; /* Pure white for a striking contrast */
+    text-shadow: 3px 3px 15px rgba(255, 215, 0, 0.8), /* Gold glow effect */
+                 2px 2px 10px rgba(255, 255, 255, 0.5); /* Softer white glow */
+    line-height: 1.8;
+    letter-spacing: 1px; /* Spacing for a premium feel */
+    font-family: 'Playfair Display', serif; /* Elegant font choice */
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+h2 {
+  font-size: 32px;
+  font-family: 'Playfair Display', serif; /* Replace with any of the fonts above */
+  font-weight: 600;
+  text-align: left;
+  letter-spacing: 1px;
+  color: #222; /* Darker shade for a premium look */
+}
+
+
+/* Best Selling Section */
+.best-selling {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 10%;
+  background-color: #ffffff;
+}
+
+/* Left Text Content */
+.text-content {
+  max-width: 250px;
+}
+
+.text-content h2 {
+  font-size: 2.5rem;
+  color: #222;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.text-content span {
+  display: block;
+}
+
+.text-content p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Button */
+.btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 18px;
+  background:linear-gradient(to right, #fdba74, #f97316);
+  color: #222;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.3s ease-in-out;
+}
+
+.btn:hover {
+  background:linear-gradient(to right, #fdba74, #f97316);
+}
+
+/* Books Container */
+.books-container {
+  display: flex;
+  gap: 20px;
+}
+
+/* Each Book */
+.book {
+  background: linear-gradient(to right, #fdba74, #f97316);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.book:hover {
+  transform: translateY(-5px);
+}
+
+/* Book Image */
+.book-img {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.book-img img {
+  width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Book Title */
+.book p {
+  font-size: 1rem;
+  color: #222;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .best-selling {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .books-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .text-content {
+    margin-bottom: 30px;
+  }
+}
+
+/* Categories Section */
+.categories {
+  padding: 40px 10%;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.categories h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 5px;
+}
+
+.subheading {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 30px;
+}
+
+/* Category Container */
+.category-container {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center vertically */
+  gap: 60px;
+  background: linear-gradient(to right, #fdba74, #f97316);
+  padding: 50px 5%;
+  flex-wrap: wrap;
+  border-radius: 10px;
+}
+
+/* Individual Category */
+.category {
+  text-align: center;
+}
+
+.category-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  width: 220px;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+}
+
+.category-card img {
+  width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Category Text */
+.category p {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #222;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .category-container {
+    flex-wrap: wrap;
+    gap: 40px;
+    padding: 30px 5%;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+  }
+}
+
+/* About Us Section */
+.about-us {
+  text-align: center;
+  padding: 50px 10%;
+  background-color: white;
+}
+
+/* About Us Heading */
+.about-us h2 {
+  font-size: 1.8rem; /* Matches the image */
+  font-weight: bold;
+  color: #222;
+  text-align: center;
+}
+
+/* Subheading */
+.subheading {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Features Section */
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  margin-top: 30px;
+}
+
+/* Individual Feature */
+.feature {
+  text-align: center;
+  max-width: 300px;
+}
+
+/* Feature Icons */
+.icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(to right, #fdba74, #f97316);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 15px;
+}
+
+.icon i {
+  font-size: 30px;
+  color: #222;
+}
+
+/* Feature Headings */
+.feature h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+/* Feature Description */
+.feature p {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .features {
+    flex-direction: column;
+    gap:40px;
+}
+}
+
+        </style>
+    </section>
+    
+    
+
+    
+   <%-include("../../views/partials/footer")%>

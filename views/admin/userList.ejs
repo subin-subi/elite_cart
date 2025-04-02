@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List | Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <aside class="fixed top-0 left-0 w-64 h-full bg-zinc-900 p-5 shadow-lg">
+        <div class="flex items-center justify-center mb-8">
+            <h1 class="admin-logo text-white font-bold text-2xl">ELITECART</h1>
+        </div>
+        <nav class="space-y-4">
+            <a href="/admin/dashboard" class="flex items-center text-gray-400 hover:text-white px-4 py-2 rounded-lg transition">Dashboard</a>
+            <a href="/admin/users" class="flex items-center text-white bg-zinc-800 px-4 py-2 rounded-lg transition">Customers</a>
+        </nav>
+    </aside>
+    <div class="ml-64 p-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">User List</h2>
+            <input type="text" id="searchUser" placeholder="Search users..." class="w-1/3 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 mb-4">
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-300 bg-white shadow-sm">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="border px-4 py-2">#</th>
+                            <th class="border px-4 py-2">Name</th>
+                            <th class="border px-4 py-2">Email</th>
+                            <th class="border px-4 py-2">Status</th>
+                            <th class="border px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% userList.forEach((user, index) => { %>
+                            <tr>
+                                <td class="border px-4 py-2"><%= index + 1 %></td>
+                                <td class="border px-4 py-2"><%= user.firstName %> <%= user.lastName %></td>
+                                <td class="border px-4 py-2"><%= user.email %></td>
+                                <td class="border px-4 py-2">
+                                    <span class="px-2 py-1 rounded-full text-sm <%= user.isVerified ? 'bg-green-500 text-white' : 'bg-red-500 text-white' %>">
+                                        <%= user.isVerified ? 'Verified' : 'Not Verified' %>
+                                    </span>
+                                </td>
+                                <td class="border px-4 py-2">
+                                    <button onclick="toggleUserBlock('<%= user._id %>', '<%= user.blocked %>')" 
+                                        class="px-3 py-1 text-white rounded-md transition-colors <%= user.blocked ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-500 hover:bg-green-600' %>">
+                                        <%= user.blocked ? 'Unblock' : 'Block' %>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to toggle user block status
+        function toggleUserBlock(userId, blocked) {
+            fetch("/admin/toggle-block", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId, blocked })
+            }).then(() => location.reload());
+        }
+
+        // Search functionality
+        document.getElementById("searchUser").addEventListener("input", (e) => {
+            const search = e.target.value.toLowerCase();
+            document.querySelectorAll("tbody tr").forEach(row => {
+                row.style.display = row.innerText.toLowerCase().includes(search) ? "" : "none";
+            });
+        });
+    </script>
+</body>
+</html>
