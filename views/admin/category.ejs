@@ -72,7 +72,7 @@
         document.getElementById("searchCategory").addEventListener("input", (e) => {
             const search = e.target.value.toLowerCase();
             document.querySelectorAll("tbody tr").forEach(row => {
-                row.style.display = row.innerText.toLowerCase().includes(search) ? "" : "none";
+                row.style.display = row.innerText.toLowerCase().includes(search) ? '' : "none";
             });
         });
     </script>
