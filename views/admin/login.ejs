@@ -13,13 +13,13 @@
     <div class="mb-8">
       <img src="/images/log.png" alt="Logo" class="h-16 mx-auto" />
     </div>
-  
+
     <!-- Login Container -->
     <div class="w-full max-w-md">
       <div class="rounded-2xl shadow-xl border border-zinc-700/50" style="background: linear-gradient(to right, #fdba74, #f97316);">
         <div class="p-8">
           <h1 class="text-2xl font-bold text-center mb-6 text-white">Admin Login</h1>
-  
+
           <form id="adminLoginForm" action="/admin/login" method="POST" class="space-y-6" novalidate>
             <!-- Email Input -->
             <div class="space-y-2">
@@ -38,7 +38,7 @@
                 </div>
               </div>
             </div>
-  
+
             <!-- Password Input -->
             <div class="space-y-2">
               <label for="password" class="block text-sm font-medium text-gray-200">Password</label>
@@ -56,11 +56,11 @@
                   id="togglePassword"
                   class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-600 hover:text-gray-500 transition-colors duration-200"
                 >
-                  <i class="far fa-eye"></i>
+                  <i id="eyeIcon" class="far fa-eye"></i>
                 </button>
               </div>
             </div>
-  
+
             <!-- Submit Button -->
             <button
               type="submit"
@@ -77,11 +77,28 @@
         </div>
       </div>
     </div>
-  
+
     <!-- Footer -->
     <footer class="mt-8 text-sm text-gray-500">
       © 2025 Elitecart. All Rights Reserved.
     </footer>
+
+    <!-- Password Toggle Script -->
+    <script>
+      document.getElementById("togglePassword").addEventListener("click", function () {
+        const passwordField = document.getElementById("password");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          eyeIcon.classList.remove("fa-eye");
+          eyeIcon.classList.add("fa-eye-slash");
+        } else {
+          passwordField.type = "password";
+          eyeIcon.classList.remove("fa-eye-slash");
+          eyeIcon.classList.add("fa-eye");
+        }
+      });
+    </script>
   </body>
-  
 </html>

@@ -6,16 +6,8 @@ const productSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    brand: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    gender: {
-        type: String,
-        enum: ["male", "female", "unisex"],
-        required: true
-    },
+    
+    
     isActive: {
         type: Boolean,
         default: true

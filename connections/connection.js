@@ -12,9 +12,7 @@ const connectDB = () => {
             console.log(err);
         });
     
-        // const user = mongoose.model("user", userSchema);
     
-        // module.exports = user;
 }
     
 export default connectDB;

@@ -4,13 +4,11 @@ import adminMiddleware from "../middlewares/adminMiddleware.js";
 import dashboardController from "../controller/admin/dashboardController.js";  
 import userController from "../controller/admin/userController.js";
 import categoryController from "../controller/admin/categoryController.js";
+import productController from "../controller/admin/productController.js";
 const router = express.Router();
 
 
-// router.use((req,res,next) => {
-// req.session.admin = true
-// next()
-// })
+
  
 router.get("/login", adminMiddleware.isLogin, authController.getAdmin);
 
@@ -24,5 +22,19 @@ router.get("/userlist",userController.getUserList)
 
 router.post("/toggle-block", adminMiddleware.checkSession, userController.getToggle)
 
-router.get("/category", categoryController.categoryController)
+router.get("/category", categoryController.getCategory)
+
+router.post("/add-category", categoryController.addCategory)
+
+router.get("/category/:id", categoryController.getCategoryById)
+
+router.put("/edit-category/:id", categoryController.updateCategory)
+
+router.patch("/hide-category/:id", categoryController.hideCategory)
+
+router.get("/products", productController.getproduct)
+
+router.post("/add-product", productController.addProduct)
+
+router
 export default router; 

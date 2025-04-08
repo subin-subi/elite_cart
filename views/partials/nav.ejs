@@ -1,327 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EliteCart - Home</title>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Joan&family=Water+Brush&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <!-- CSS -->
-    <style>
-        /* General Styles */
-        body {
-            font-family: 'Joan', serif;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Navbar Styles */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #ffffff;
-            padding: 15px 30px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        /* Logo Styling */
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-            padding-left: 50px;
-        }
-
-        .navbar .logo img {
-            height: 50px; /* Adjusted size */
-            width: auto; /* Maintain aspect ratio */
-            display: block;
-            object-fit: contain;
-        }
-
-        /* Navbar Links */
-        .navbar .nav-links {
-            display: flex;
-            justify-content: center;
-            gap: 80px;
-            flex-grow: 1;
-            align-items: center;
-        }
-
-        .navbar .nav-links li {
-            list-style: none;
-            display: inline-block;
-        }
-
-        .navbar .nav-links a {
-            color: #000000;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-
-        .navbar .nav-links a:hover {
-            color: #c1dcdc;
-        }
-
-        /* Icons Section */
-        .navbar .nav-icons {
-            display: flex;
-            gap: 60px;
-            align-items: center;
-            padding-right: 50px;
-            list-style: none;
-        }
-
-        .navbar .nav-icons a {
-            color: #000000;
-            font-size: 15px;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .navbar .nav-icons a:hover {
-            color: #c1dcdc;
-        }
-
-        /* Dropdown Menu */
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-toggle {
-            background: none;
-            border: none;
-            color: #333;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            width: 180px;
-            display: none;
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        .dropdown-menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            color: #333;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-
-        .dropdown-menu a:hover {
-            background: #f5f5f5;
-        }
-
-        .dropdown-menu .logout-btn {
-            width: 100%;
-            text-align: left;
-            background: white;
-            color: #333;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .dropdown-menu .logout-btn:hover {
-            background: #f5f5f5;
-        }
-
-        .dropdown.active .dropdown-menu {
-            display: block;
-        }
-
-        /* Logout Button */
-        .logout-btn {
-            background: linear-gradient(135deg, #94e8c9, #d6c7cb);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 75, 43, 0.3);
-            background: linear-gradient(135deg, #ff416c, #000000);
-        }
-
-        /* Responsive Navbar */
-        @media (max-width: 768px) {
-            .navbar .nav-links {
-                flex-direction: column;
-                gap: 15px;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                background-color: #333;
-                width: 100%;
-                display: none;
-            }
-
-            .navbar.active .nav-links {
-                display: flex;
-            }
-
-            .navbar .nav-links a {
-                font-size: 18px;
-                text-align: center;
-            }
-
-            /* Responsive Logo */
-            .navbar .logo img {
-                height: 40px; /* Adjust for mobile */
-            }
-        }
-    </style>
-
+    <title>Responsive Navbar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/YOUR_FA_KIT.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
+
+<body class="bg-gray-100">
 
     <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">
-            <a href="/">
-                <img src="/images/log.png" alt="EliteCart Logo">
-            </a>
+    <div class="fixed z-50 top-0 w-screen h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 bg-white text-black backdrop-blur-sm border-b border-gray-700">
+
+
+        <!-- Left Side: Logo -->
+        <div class="flex items-center">
+            <img src="/images/log.png" alt="logo" class="h-6 sm:h-10 md:h-12 lg:h-14 w-auto object-contain transition-all duration-300" style="max-height: 3.5rem;">
         </div>
-    
-        <ul class="nav-links flex gap-6 items-center">
-            <!-- Home -->
-            <li>
-                <a href="/" class="flex items-center gap-2">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
+        
+        <!-- Mobile Menu Button -->
+        <div class="lg:hidden">
+            <button id="menu-toggle" class="p-1.5 sm:p-2 rounded-lg text-white hover:bg-gray-700 transition-colors">
+                <i class="fa-solid fa-bars text-xl sm:text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Navigation Links (Hidden in Mobile) -->
+        <nav class="hidden lg:flex items-center space-x-10">
+            <a href="/home" class="text-lg font-semibold text-black hover:text-gold transition-all duration-300 ease-in-out tracking-wide flex items-center space-x-3">
+                <img src="https://cdn-icons-png.flaticon.com/128/1946/1946488.png" alt="Home" class="w-6 h-6"> 
+                <span>Home</span>
+            </a>
+            <a href="/products" class="text-lg font-semibold text-black hover:text-gold transition-all duration-300 ease-in-out tracking-wide flex items-center space-x-3">
+                <img src="https://cdn-icons-png.flaticon.com/128/2331/2331970.png" alt="Products" class="w-6 h-6">
+                <span>Products</span>
+            </a>
+            <a href="/shop" class="text-lg font-semibold text-black hover:text-gold transition-all duration-300 ease-in-out tracking-wide flex items-center space-x-3">
+                <img src="https://cdn-icons-png.flaticon.com/128/3081/3081648.png" alt="Shop" class="w-6 h-6">
+                <span>Shop</span>
+            </a>
+            <a href="/contact" class="text-lg font-semibold text-black hover:text-gold transition-all duration-300 ease-in-out tracking-wide flex items-center space-x-3">
+                <img src="https://cdn-icons-png.flaticon.com/128/3059/3059475.png" alt="Contact" class="w-6 h-6">
+                <span>Contact</span>
+            </a>
+            <a href="/about" class="text-lg font-semibold text-black hover:text-gold transition-all duration-300 ease-in-out tracking-wide flex items-center space-x-3">
+                <img src="https://cdn-icons-png.flaticon.com/128/3176/3176366.png" alt="About" class="w-6 h-6">
+                <span>About</span>
+            </a>
+        </nav>
+        
+
+        <!-- Authentication and User Icons -->
+        <div class="flex items-center justify-end" id="loginButtons">
+            <!-- Auth Buttons -->
+            <div class="flex items-center space-x-3" id="authButtons">
+                <a href="/login" class="text-sm font-semibold text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 px-4 py-2 rounded-lg shadow-md transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-sign-in-alt"></i>
+                    <span>Login</span>
                 </a>
-            </li>
-    
-            <!-- Products -->
-            <li>
-                <a href="/products" class="flex items-center gap-2">
-                    <i class="fas fa-box-open"></i>
-                    <span>Products</span>
+                <a href="/signup" class="text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 px-4 py-2 rounded-lg shadow-lg transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Sign Up</span>
                 </a>
-            </li>
-    
-            <!-- About -->
-            <li>
-                <a href="/about" class="flex items-center gap-2">
-                    <i class="fas fa-info-circle"></i>
-                    <span>About</span>
+            </div>
+            
+
+            <!-- User Icons (Visible when authenticated) -->
+            <div class="hidden items-center space-x-2 sm:space-x-6" id="userIcons">
+                <a href="/wishlist" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors">
+                    <i class="fa-regular fa-heart text-lg sm:text-xl"></i>
                 </a>
-            </li>
-        </ul>
-    
-        <ul class="nav-icons flex gap-6 items-center">
-            <!-- Cart -->
-            <li>
-                <a href="/cart" class="flex items-center gap-2">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Cart</span>
+                <a href="/profile" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors">
+                    <i class="fa-regular fa-user text-lg sm:text-xl"></i>
                 </a>
-            </li>
-    
-            <!-- Wishlist -->
-            <li>
-                <a href="/wishlist" class="flex items-center gap-2">
-                    <i class="fas fa-heart"></i>
-                    <span>Wishlist</span>
+                <a href="/cart" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors relative">
+                    <i class="fa-solid fa-cart-shopping text-lg sm:text-xl"></i>
                 </a>
-            </li>
-    
-            <!-- Profile -->
-            <li>
-                <a href="/profile" class="flex items-center gap-2">
-                    <i class="fas fa-user"></i>
-                    <span>My Account</span>
-                </a>
-            </li>
-    
-            <!-- Orders -->
-            <li>
-                <a href="/orders" class="flex items-center gap-2">
-                    <i class="fas fa-box"></i>
-                    <span>My Orders</span>
-                </a>
-            </li>
-    
-            <!-- Login / Logout Button -->
-            <li>
-                <button id="authBtn" class="relative flex items-center gap-2 px-5 py-2 rounded-full text-white text-lg font-semibold shadow-lg transition-all duration-300 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-700 hover:to-blue-900 transform hover:scale-105">
-                    <i id="authIcon" class="fas fa-sign-in-alt"></i>
-                    <span id="authText">Login</span>
+                <button onclick="handleLogout()" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors">
+                    <i class="fa-solid fa-sign-out-alt text-lg sm:text-xl"></i>
                 </button>
-            </li>
-        </ul>
-    </nav>
-    
-    <!-- JavaScript for Logout/Login Button -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden lg:hidden z-40">
+        <div class="fixed top-14 left-0 w-full max-w-sm bg-white border-r border-gray-200 h-screen p-4 transform transition-transform">
+            <nav class="flex flex-col space-y-2">
+                <a href="/home" class="p-3 text-sm font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"><i class="fa-solid fa-home mr-2"></i>Home</a>
+                <a href="/shop" class="p-3 text-sm font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"><i class="fa-solid fa-store mr-2"></i>Shop</a>
+                <a href="/contact" class="p-3 text-sm font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"><i class="fa-solid fa-envelope mr-2"></i>Contact</a>
+                <a href="/about" class="p-3 text-sm font-medium text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"><i class="fa-solid fa-info-circle mr-2"></i>About</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Script -->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Check if user is logged in
-            const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
-    
-            const authBtn = document.getElementById("authBtn");
-            const authIcon = document.getElementById("authIcon");
-            const authText = document.getElementById("authText");
-    
-            if (isAuthenticated) {
-                // User is logged in → Show "Logout"
-                authBtn.classList.replace("bg-blue-500", "bg-red-500");
-                authBtn.classList.replace("hover:bg-blue-600", "hover:bg-red-600");
-                authIcon.classList.replace("fa-sign-in-alt", "fa-sign-out-alt");
-                authText.textContent = "Logout";
-    
-                authBtn.addEventListener("click", () => {
-                    // Clear session and log out
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location.replace('/signin');
-                });
-            } else {
-                // User is NOT logged in → Show "Login"
-                authBtn.addEventListener("click", () => {
-                    window.location.href = "/login";
-                });
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                const response = await fetch('/check-session');
+                const data = await response.json();
+
+                if (data.isLoggedIn) {
+                    document.getElementById("authButtons").style.display = "none";
+                    document.getElementById("userIcons").style.display = "flex";
+                } else {
+                    document.getElementById("authButtons").style.display = "flex";
+                    document.getElementById("userIcons").style.display = "none";
+                }
+            } catch (error) {
+                console.error("Session check error:", error);
             }
         });
-        document.getElementById("authBtn").addEventListener("click", function () {
-        window.location.href = "/controller/user/signup"; // Redirect to Signup Page
-    });
+
+        async function handleLogout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin'
+                });
+
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Logged out successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => { window.location.href = '/login'; });
+                } else {
+                    throw new Error("Logout failed");
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong! Please try again.'
+                });
+            }
+        }
+
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById("menu-toggle");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        menuToggle.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+
+        mobileMenu.addEventListener("click", (event) => {
+            if (event.target === mobileMenu) {
+                mobileMenu.classList.add("hidden");
+            }
+        });
     </script>
-    
-    </body>
-    
+
+</body>
+
 </html>
