@@ -30,11 +30,16 @@ router.get("/category/:id", categoryController.getCategoryById)
 
 router.put("/edit-category/:id", categoryController.updateCategory)
 
-router.patch("/hide-category/:id", categoryController.hideCategory)
+router.get("/archived-category", categoryController.archivedCategory)
 
+router.get("/restore-category/:id", categoryController.restoreCategory)
+
+router.patch("/hide-category/:id", categoryController.hideCategory)
 router.get("/products", productController.getproduct)
 
 router.post("/add-product", productController.addProduct)
+
+
 
 router
 export default router; 

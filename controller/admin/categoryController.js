@@ -3,13 +3,14 @@ import Category from "../../model/categoryModel.js";
 
 const getCategory = async (req, res) => {
     try {
-        const categories = await Category.find().sort({ createdAt: -1 }); // Fetch categories from DB
-        res.render("admin/category", { categories }); // Pass categories to EJS
+        const categories = await Category.find({ isHidden: false }).sort({ createdAt: -1 }); // Only visible categories
+        res.render("admin/category", { categories }); // Pass to EJS
     } catch (error) {
         console.error("Error fetching categories:", error);
         res.status(500).send("Internal Server Error");
     }
 };
+
 
 
 const addCategory = async (req, res) => {
@@ -106,16 +107,9 @@ const editCategory = async (req, res) => {
             return res.status(400).send('Category name already exists.');
         }
 
-        // Validate categoryDescription
-        if (categoryDescription.length < 10 || categoryDescription.length > 100) {
-            return res.status(400).send(
-                'Description must be between 10 and 100 characters.'
-            );
-        }
-
+       
         await Category.findByIdAndUpdate(categoryId, {
             name: formattedCategoryName,
-            description: categoryDescription,
         });
 
         res.redirect('/admin/category');
@@ -159,35 +153,48 @@ const updateCategory = async (req, res) => {
     }
 };
 
-// Hide or Show Category (Toggle)
 const hideCategory = async (req, res) => {
-    try {
-        const { id } = req.params;
-       
-        
+    const categoryId = req.params.id;
 
-        const category = await Category.findById(id);
-        if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
+    try {
+        const categories = await Category.find({ isHidden: false });
+        if (!categories) {
+            return res.status(404).json({ success: false, message: "Category not found" });
         }
 
-        category.isActive = !category.isActive;
-        await category.save();
+        await Category.findByIdAndUpdate(categoryId, { isHidden: true });
+        res.status(200).json({ success: true, message: 'Category hidden successfully' });
 
-        return res.status(200).json({
-            success: true,
-            isActive: category.isActive, // return this for frontend condition
-            message: `Category ${category.isActive ? 'shown' : 'hidden'} successfully`
-        });
     } catch (error) {
-        console.error('Error toggling category:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Error toggling category status'
-        });
+        console.error("Error hiding category:", error);
+        res.status(500).json({ success: false, message: 'Error hiding category' });
     }
 };
 
 
 
-export default {getCategory, addCategory, editCategory, getCategoryById, updateCategory,hideCategory};
+
+// Hide or Show Category (Toggle)
+const archivedCategory = async (req, res) => {
+    const categories = await Category.find({ isHidden: true }).sort({ createdAt: -1 });
+    console.log(categories);
+    res.render('admin/archived-category', { categories });
+        }
+
+        const restoreCategory = async (req, res) => {
+            
+            const categoryId = req.params.id;
+            try {
+                // Update the category to mark it as not hidden
+                await Category.findByIdAndUpdate(categoryId, { isHidden: false });
+                res.status(200).json({ message: 'Category restored successfully' });
+            } catch (error) {
+                res.status(500).json({ message: 'Error restoring category' });
+            }
+        };
+        
+
+
+
+export default {getCategory, addCategory, editCategory, getCategoryById,
+     updateCategory,archivedCategory,restoreCategory,hideCategory};

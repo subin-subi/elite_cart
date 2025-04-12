@@ -125,18 +125,38 @@
         }
 
         function hideCategory(categoryId) {
-            fetch(`/admin/hide-category/${categoryId}`, { method: "PATCH" })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire("Success", "Category hidden successfully!", "success").then(() => {
-                        window.location.reload();
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This category will be hidden.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, hide it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/admin/hide-category/${categoryId}`, { 
+                        method: "PATCH",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire("Hidden!", data.message, "success").then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire("Error", data.message || "Failed to hide category", "error");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire("Error", "Error hiding category", "error");
                     });
-                } else {
-                    Swal.fire("Error", "Failed to hide category", "error");
                 }
-            })
-            .catch(() => Swal.fire("Error", "Error hiding category", "error"));
+            });
         }
 
 
