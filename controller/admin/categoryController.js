@@ -176,11 +176,16 @@ const hideCategory = async (req, res) => {
 
 // Hide or Show Category (Toggle)
 const archivedCategory = async (req, res) => {
+    try{
     const categories = await Category.find({ isHidden: true }).sort({ createdAt: -1 });
-    console.log(categories);
     res.render('admin/archived-category', { categories });
-        }
-
+}
+catch(error){
+    console.error("Error fetching categories:", error);
+    res.status(500).send("Internal Server Error");
+}
+}
+///////////////////////////////////////////////////////////////////////////////
         const restoreCategory = async (req, res) => {
             
             const categoryId = req.params.id;
@@ -192,6 +197,8 @@ const archivedCategory = async (req, res) => {
                 res.status(500).json({ message: 'Error restoring category' });
             }
         };
+
+        
         
 
 

@@ -5,6 +5,7 @@ import dashboardController from "../controller/admin/dashboardController.js";
 import userController from "../controller/admin/userController.js";
 import categoryController from "../controller/admin/categoryController.js";
 import productController from "../controller/admin/productController.js";
+import orderController from "../controller/admin/orderController.js";
 const router = express.Router();
 
 
@@ -22,6 +23,9 @@ router.get("/userlist",userController.getUserList)
 
 router.post("/toggle-block", adminMiddleware.checkSession, userController.getToggle)
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 router.get("/category", categoryController.getCategory)
 
 router.post("/add-category", categoryController.addCategory)
@@ -32,14 +36,18 @@ router.put("/edit-category/:id", categoryController.updateCategory)
 
 router.get("/archived-category", categoryController.archivedCategory)
 
-router.get("/restore-category/:id", categoryController.restoreCategory)
+router.patch("/categories/restore/:id", categoryController.restoreCategory)
 
 router.patch("/hide-category/:id", categoryController.hideCategory)
-router.get("/products", productController.getproduct)
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+router.get("/products", productController.getProduct)
 
 router.post("/add-product", productController.addProduct)
 
+router.get("/Orders", orderController.getAllOrders)
 
 
-router
 export default router; 
