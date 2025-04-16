@@ -64,7 +64,6 @@ const addProduct = async (req, res) => {
     }
 
     try {
-        console.log("FILES RECEIVED:", req.files);
       if (!req.files || req.files.length !== 3) {
         return res.status(400).json({ message: 'Please upload exactly 3 images' });
       }
