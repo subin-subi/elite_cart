@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Responsive Navbar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/YOUR_FA_KIT.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -15,12 +15,11 @@
     <!-- Navbar -->
     <div class="fixed z-50 top-0 w-screen h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 bg-white text-black backdrop-blur-sm border-b border-gray-700">
 
-
         <!-- Left Side: Logo -->
         <div class="flex items-center">
             <img src="/images/log.png" alt="logo" class="h-6 sm:h-10 md:h-12 lg:h-14 w-auto object-contain transition-all duration-300" style="max-height: 3.5rem;">
         </div>
-        
+
         <!-- Mobile Menu Button -->
         <div class="lg:hidden">
             <button id="menu-toggle" class="p-1.5 sm:p-2 rounded-lg text-white hover:bg-gray-700 transition-colors">
@@ -51,7 +50,6 @@
                 <span>About</span>
             </a>
         </nav>
-        
 
         <!-- Authentication and User Icons -->
         <div class="flex items-center justify-end" id="loginButtons">
@@ -66,23 +64,13 @@
                     <span>Sign Up</span>
                 </a>
             </div>
-            
 
-            <!-- User Icons (Visible when authenticated) -->
-            <div class="hidden items-center space-x-2 sm:space-x-6" id="userIcons">
-                <a href="/wishlist" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors">
-                    <i class="fa-regular fa-heart text-lg sm:text-xl"></i>
-                </a>
-                <a href="/profile" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors">
-                    <i class="fa-regular fa-user text-lg sm:text-xl"></i>
-                </a>
-                <a href="/cart" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors relative">
-                    <i class="fa-solid fa-cart-shopping text-lg sm:text-xl"></i>
-                </a>
-                <button onclick="handleLogout()" class="p-1.5 sm:p-2 text-white hover:text-gray-300 transition-colors">
-                    <i class="fa-solid fa-sign-out-alt text-lg sm:text-xl"></i>
-                </button>
-            </div>
+           <!-- Logout Button (shown only when logged in) -->
+    <button id="logoutButton" class="hidden flex items-center space-x-2 text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
+    <i class="fa-solid fa-right-from-bracket"></i>
+    <span>Logout</span>
+    </button>
+
         </div>
     </div>
 
@@ -100,63 +88,37 @@
 
     <!-- Script -->
     <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-            try {
-                const response = await fetch('/check-session');
-                const data = await response.json();
+     document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        const response = await fetch('/check-session');
+        const data = await response.json();
 
-                if (data.isLoggedIn) {
-                    document.getElementById("authButtons").style.display = "none";
-                    document.getElementById("userIcons").style.display = "flex";
-                } else {
-                    document.getElementById("authButtons").style.display = "flex";
-                    document.getElementById("userIcons").style.display = "none";
-                }
-            } catch (error) {
-                console.error("Session check error:", error);
-            }
-        });
-
-        async function handleLogout() {
-            try {
-                const response = await fetch('/logout', {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'same-origin'
-                });
-
-                if (response.redirected) {
-                    window.location.href = response.url;
-                    return;
-                }
-
-                if (response.ok) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Logged out successfully!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => { window.location.href = '/login'; });
-                } else {
-                    throw new Error("Logout failed");
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong! Please try again.'
-                });
-            }
+        if (data.isLoggedIn) {
+            document.getElementById("authButtons").style.display = "none";
+            document.getElementById("logoutButton").style.display = "flex";
+        } else {
+            document.getElementById("authButtons").style.display = "flex";
+            document.getElementById("logoutButton").style.display = "none";
         }
+    } catch (error) {
+        console.error("Session check error:", error);
+    }
+
+    // Handle logout click
+    const logoutBtn = document.getElementById("logoutButton");
+    logoutBtn.addEventListener("click", async () => {
+        try {
+            await fetch('/logout', { method: 'POST' }); // or GET, depending on your server
+            window.location.reload(); // or redirect to login
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    });
+});
 
         // Mobile Menu Toggle
         const menuToggle = document.getElementById("menu-toggle");
         const mobileMenu = document.getElementById("mobile-menu");
-
-        menuToggle.addEventListener("click", () => {
-            mobileMenu.classList.toggle("hidden");
-        });
 
         mobileMenu.addEventListener("click", (event) => {
             if (event.target === mobileMenu) {

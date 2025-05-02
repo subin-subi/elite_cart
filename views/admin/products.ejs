@@ -56,11 +56,7 @@
               <tr>
                 <td class="px-6 py-4"><%= product.productName %></td>
                 <td class="px-6 py-4">₹<%= product.price.toLocaleString() %></td>
-                <td class="px-6 py-4">
-                  <form action="/admin/update-stock/<%= product._id %>" method="POST">
-                    <input name="stock" type="number" value="<%= product.stock %>" class="w-16 px-2 py-1 rounded bg-gray-800 text-white border border-gray-600">
-                    <button type="submit" class="text-sm text-blue-400 hover:underline ml-2">Update</button>
-                  </form>
+                <td class="px-6 py-4"><%= product.stock %></td>
                 </td>
                 <td class="px-6 py-4"><%= product.categoriesId.name %></td>
                 <td class="px-6 py-4 flex space-x-2">
@@ -317,26 +313,26 @@
             return;
         }
         
-        if (selectedFiles.length !== 3) {
+        if (selectedFiles.length === 0) {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Please select exactly 3 images.',
+                text: 'Please select at least one image.',
             });
             return;
         }
-        
-        const formData = new FormData(form);
-        
-        // Remove any existing image entries
-        for (let pair of formData.entries()) {
-            if (pair[0] === 'images') {
-                formData.delete(pair[0]);
-            }
-        }
-        
-        // Add selected files
-        selectedFiles.forEach(file => {
+
+        // Create FormData object
+        const formData = new FormData();
+        formData.append('productName', form.querySelector('[name="productName"]').value);
+        formData.append('categoriesId', form.querySelector('[name="categoriesId"]').value);
+        formData.append('color', form.querySelector('[name="color"]').value);
+        formData.append('description', description);
+        formData.append('price', form.querySelector('[name="price"]').value);
+        formData.append('stock', form.querySelector('[name="stock"]').value);
+
+        // Add files to FormData
+        selectedFiles.forEach((file, index) => {
             formData.append('images', file);
         });
         
@@ -378,66 +374,92 @@
         }
     });
 
-
-//////////////////////////////////////////////////////////////
-let cropper;
-  const cropImage = document.getElementById('cropImage');
-  const cropModal = document.getElementById('cropModal');
-
-  function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      openCropModal(e.target.result);
+    // Image cropping functionality
+    let cropper;
+    const cropImage = (imageUrl) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = imageUrl;
+            
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size to 300x300
+                canvas.width = 300;
+                canvas.height = 300;
+                
+                // Calculate the center crop
+                const size = Math.min(img.width, img.height);
+                const x = (img.width - size) / 2;
+                const y = (img.height - size) / 2;
+                
+                // Draw the cropped image
+                ctx.drawImage(img, x, y, size, size, 0, 0, 300, 300);
+                
+                // Convert to base64
+                const croppedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                resolve(croppedBase64);
+            };
+        });
     };
-    reader.readAsDataURL(file);
-  }
 
-  function openCropModal(imageUrl) {
-    cropImage.src = imageUrl;
-    cropModal.classList.remove('hidden');
+    const cropModal = document.getElementById('cropModal');
+    const cropImageElement = document.getElementById('cropImage');
 
-    cropImage.onload = () => {
-      cropper = new Cropper(cropImage, {
-        aspectRatio: 1, // square crop
-        viewMode: 1,
-        movable: true,
-        zoomable: true,
-        rotatable: true,
-        scalable: true,
-      });
-    };
-  }
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-  function closeCropModal() {
-    if (cropper) {
-      cropper.destroy();
-      cropper = null;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            openCropModal(e.target.result);
+        };
+        reader.readAsDataURL(file);
     }
-    cropModal.classList.add('hidden');
-  }
 
-  function cropAndSave() {
-    if (!cropper) return;
+    function openCropModal(imageUrl) {
+        cropImageElement.src = imageUrl;
+        cropModal.classList.remove('hidden');
 
-    const canvas = cropper.getCroppedCanvas({
-      width: 300,
-      height: 300,
-    });
+        cropImageElement.onload = () => {
+            cropper = new Cropper(cropImageElement, {
+                aspectRatio: 1, // square crop
+                viewMode: 1,
+                movable: true,
+                zoomable: true,
+                rotatable: true,
+                scalable: true,
+            });
+        };
+    }
 
-    const croppedImageURL = canvas.toDataURL('image/png');
+    function closeCropModal() {
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        cropModal.classList.add('hidden');
+    }
 
-    // 👇 Optional Preview (or you can upload this to backend)
-    const preview = document.createElement('img');
-    preview.src = croppedImageURL;
-    preview.className = "w-40 h-40 rounded-full mt-4 mx-auto border-4 border-blue-300";
-    document.body.appendChild(preview);
+    function cropAndSave() {
+        if (!cropper) return;
 
-    closeCropModal();
-  }
+        const canvas = cropper.getCroppedCanvas({
+            width: 300,
+            height: 300,
+        });
 
+        const croppedImageURL = canvas.toDataURL('image/png');
+
+        // 👇 Optional Preview (or you can upload this to backend)
+        const preview = document.createElement('img');
+        preview.src = croppedImageURL;
+        preview.className = "w-40 h-40 rounded-full mt-4 mx-auto border-4 border-blue-300";
+        document.body.appendChild(preview);
+
+        closeCropModal();
+    }
   </script>
   <!-- Include JavaScript logic for modal, cropper, form submission, and deletion -->
   

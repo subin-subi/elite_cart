@@ -1,19 +1,21 @@
 import { Router } from "express";
 import authController from "../controller/user/signupController.js"; 
-
+import otpController from "../controller/user/otpController.js";
 import userMiddleware from "../middlewares/userMiddleware.js";
 
 
 
 const route = Router();
 
+route.get("/check-session",authController.checkSession)
+
 route.get("/signup", userMiddleware.isLogin, authController.getSignUp);
 
 route.post("/signup", authController.postSignup);
 
-route.post("/validate-otp", authController.validateOTP);
+route.post("/validate-otp", otpController.validateOTP);
 
-route.post("/resend-otp", authController.resendOTP);
+route.post("/resend-otp", otpController.resendOTP);
 
 route.get('/login', userMiddleware.isLogin, authController.getLogin)
 
@@ -23,9 +25,9 @@ route.get("/home",  authController.homepage)
 
 route.get('/forgot-password', authController.getForgotPassword)
 
-route.post("/forgot-password/send-otp", authController.sendForgotPasswordOTP)
+route.post("/forgot-password/send-otp", otpController.sendForgotPasswordOTP)
 
-route.post("/forgot-password/verify-otp", authController.verifyForgotPasswordOTP)
+route.post("/forgot-password/verify-otp", otpController.verifyForgotPasswordOTP)
 
 route.post("/forgot-password/reset-password",authController.resetPassword)
 
@@ -37,10 +39,10 @@ route.get("/auth/google", authController.getGoogle)
 
 route.get('/auth/google/callback', authController.getGoogleCallback);
 
-route.get("/logout", authController.getLogout)
+route.post("/logout", authController.getLogout)
 
 
-
+    
 export default route; 
 
 
