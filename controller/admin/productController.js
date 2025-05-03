@@ -1,5 +1,3 @@
-// controllers/admin/productController.js
-
 import Product from '../../model/productModel.js';
 import Category from '../../model/categoryModel.js';
 
@@ -56,16 +54,16 @@ const getProduct = async (req, res) => {
   }
 };
 
-
 const addProduct = async (req, res) => {
   try {
-    const { productName, categoriesId, color, description, price, stock, croppedImages } = req.body;
+    const { productName, categoriesId, color, description, price, stock } = req.body;
+    const files = req.files;
 
     if (!productName || !categoriesId || !color || !description || !price || !stock) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    if (!croppedImages || croppedImages.length === 0) {
+    if (!files || files.length === 0) {
       return res.status(400).json({ message: 'Please upload at least one image' });
     }
 
@@ -76,32 +74,32 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ message: validationError.message });
     }
 
+    const parsedPrice = parseFloat(price);
+    const parsedStock = parseInt(stock);
+    if (isNaN(parsedPrice) || isNaN(parsedStock)) {
+      return res.status(400).json({ message: 'Price and stock must be valid numbers' });
+    }
+
     const categoryExists = await Category.findById(categoriesId);
     if (!categoryExists) {
       return res.status(400).json({ message: 'Invalid category selected' });
     }
 
-    const existingProduct = await Product.findOne({
-      productName: validatedName
-    });
-
+    const existingProduct = await Product.findOne({ productName: validatedName });
     if (existingProduct) {
       return res.status(400).json({ message: 'A product with this name already exists' });
     }
 
-    // Upload cropped images to Cloudinary
     const imageUrls = [];
-    for (const base64Image of croppedImages) {
-      if (base64Image) {
-        try {
-          const result = await cloudinary.uploader.upload(base64Image, {
-            folder: 'products'
-          });
-          imageUrls.push(result.secure_url);
-        } catch (error) {
-          console.error('Error uploading image to Cloudinary:', error);
-          return res.status(500).json({ message: 'Error uploading images' });
-        }
+    for (const file of files) {
+      try {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: 'products'
+        });
+        imageUrls.push(result.secure_url);
+      } catch (error) {
+        console.error('Cloudinary upload error:', error);
+        return res.status(500).json({ message: 'Image upload failed' });
       }
     }
 
@@ -110,8 +108,8 @@ const addProduct = async (req, res) => {
       categoriesId,
       color,
       description,
-      price: parseFloat(price),
-      stock: parseInt(stock),
+      price: parsedPrice,
+      stock: parsedStock,
       imageUrl: imageUrls,
       isActive: true
     });
@@ -122,7 +120,8 @@ const addProduct = async (req, res) => {
     console.error('Error adding product:', error);
     res.status(500).json({ message: 'Error adding product' });
   }
-}
+};
+
 
 const productUpdate = async (req, res) => {
   try {
@@ -226,7 +225,6 @@ const updateProduct = async (req, res) => {
   }
 }
 
-
 const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.id;
@@ -243,9 +241,6 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
-
-
-
 
 export default {
   getProduct, 

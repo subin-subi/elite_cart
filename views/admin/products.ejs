@@ -174,295 +174,216 @@
 </div>
 
 
-  <script>
-    function confirmDelete(productId) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'You won\'t be able to revert this!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          fetch(`/admin/delete-product/${productId}`, {
-            method: 'DELETE'
-          })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
+<script>
+  let selectedFiles = [];
+
+  function confirmDelete(productId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/admin/delete-product/${productId}`, {
+          method: 'DELETE'
+        })
+        .then(async res => {
+          try {
+            const data = await res.json();
+            if (res.ok && data.success) {
               Swal.fire('Deleted!', 'Product has been deleted.', 'success').then(() => {
                 window.location.reload();
               });
             } else {
-              Swal.fire('Error!', 'Something went wrong.', 'error');
+              Swal.fire('Error!', data.message || 'Something went wrong.', 'error');
             }
-          });
-        }
-      });
-    }
-  
-    function toggleModal() {
-      const modal = document.getElementById('productModal');
-      modal.classList.toggle('hidden');
-    }
-  
-    function closeOnOutside(event) {
-      if (event.target.id === 'productModal') {
-        toggleModal();
+          } catch {
+            Swal.fire('Error!', 'Invalid server response.', 'error');
+          }
+        });
       }
-    }
-  
-    const form = document.getElementById('addProductForm');
-    const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const imageCount = document.getElementById('imageCount');
-    let selectedFiles = [];
-
-    imageInput.addEventListener('change', function(e) {
-        const files = Array.from(e.target.files);
-        
-        // Clear previous preview if starting fresh
-        if (selectedFiles.length === 0) {
-            imagePreview.innerHTML = '';
-        }
-        
-        // Add new files to selected files array
-        files.forEach(file => {
-            if (selectedFiles.length < 3) {
-                selectedFiles.push(file);
-                
-                // Create preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.createElement('div');
-                    preview.className = 'relative';
-                    preview.innerHTML = `
-                        <img src="${e.target.result}" class="w-24 h-24 object-cover rounded" />
-                        <button type="button" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center" data-index="${selectedFiles.length - 1}">×</button>
-                    `;
-                    imagePreview.appendChild(preview);
-                    
-                    // Add click handler for remove button
-                    preview.querySelector('button').addEventListener('click', function() {
-                        const index = parseInt(this.dataset.index);
-                        selectedFiles.splice(index, 1);
-                        preview.remove();
-                        updateImageCount();
-                        // Reassign indices to remaining remove buttons
-                        imagePreview.querySelectorAll('button').forEach((btn, idx) => {
-                            btn.dataset.index = idx;
-                        });
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        updateImageCount();
-        
-        // Reset input if we have 3 images
-        if (selectedFiles.length >= 3) {
-            imageInput.value = '';
-        }
     });
+  }
 
-    function updateImageCount() {
-        imageCount.textContent = `${selectedFiles.length}/3 images selected`;
-        if (selectedFiles.length === 3) {
-            imageInput.disabled = true;
-        } else {
-            imageInput.disabled = false;
-        }
+  function toggleModal() {
+    const modal = document.getElementById('productModal');
+    modal.classList.toggle('hidden');
+  }
+
+  function closeOnOutside(event) {
+    if (event.target.id === 'productModal') {
+      toggleModal();
+    }
+  }
+
+  const form = document.getElementById('addProductForm');
+  const imageInput = document.getElementById('imageInput');
+  const imagePreview = document.getElementById('imagePreview');
+  const imageCount = document.getElementById('imageCount');
+  const descriptionInput = form.querySelector('textarea[name="description"]');
+
+  imageInput.addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+
+    if (selectedFiles.length === 0) {
+      imagePreview.innerHTML = '';
     }
 
-    const descriptionInput = document.querySelector('textarea[name="description"]');
-
-    // Add validation feedback elements
-    descriptionInput.insertAdjacentHTML('afterend', `
-        <div class="text-sm mt-1">
-            <span id="descriptionLength" class="text-gray-400">0/25 characters</span>
-            <span id="descriptionError" class="text-red-500 hidden">Description must be between 10 and 25 characters</span>
-        </div>
-    `);
-
-    // Update character count and validation in real-time
-    descriptionInput.addEventListener('input', function() {
-        const length = this.value.trim().length;
-        document.getElementById('descriptionLength').textContent = `${length}/25 characters`;
-        
-        if (length < 10 || length > 25) {
-            document.getElementById('descriptionError').classList.remove('hidden');
-        } else {
-            document.getElementById('descriptionError').classList.add('hidden');
-        }
-    });
-
-    // Add form validation
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const description = descriptionInput.value.trim();
-        if (description.length < 10 || description.length > 25) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                text: 'Description must be between 10 and 25 characters'
-            });
-            return;
-        }
-        
-        if (selectedFiles.length === 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Please select at least one image.',
-            });
-            return;
-        }
-
-        // Create FormData object
-        const formData = new FormData();
-        formData.append('productName', form.querySelector('[name="productName"]').value);
-        formData.append('categoriesId', form.querySelector('[name="categoriesId"]').value);
-        formData.append('color', form.querySelector('[name="color"]').value);
-        formData.append('description', description);
-        formData.append('price', form.querySelector('[name="price"]').value);
-        formData.append('stock', form.querySelector('[name="stock"]').value);
-
-        // Add files to FormData
-        selectedFiles.forEach((file, index) => {
-            formData.append('images', file);
-        });
-        
-        try {
-            const response = await fetch('/admin/add-product', {
-                method: 'POST',
-                body: formData
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: data.message || 'Product added successfully!',
-                }).then(() => {
-                    selectedFiles = [];
-                    form.reset();
-                    imagePreview.innerHTML = '';
-                    updateImageCount();
-                    toggleModal();
-                    location.reload();
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message || 'Something went wrong!',
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Unexpected error occurred.',
-            });
-        }
-    });
-
-    // Image cropping functionality
-    let cropper;
-    const cropImage = (imageUrl) => {
-        return new Promise((resolve) => {
-            const img = new Image();
-            img.src = imageUrl;
-            
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                // Set canvas size to 300x300
-                canvas.width = 300;
-                canvas.height = 300;
-                
-                // Calculate the center crop
-                const size = Math.min(img.width, img.height);
-                const x = (img.width - size) / 2;
-                const y = (img.height - size) / 2;
-                
-                // Draw the cropped image
-                ctx.drawImage(img, x, y, size, size, 0, 0, 300, 300);
-                
-                // Convert to base64
-                const croppedBase64 = canvas.toDataURL('image/jpeg', 0.8);
-                resolve(croppedBase64);
-            };
-        });
-    };
-
-    const cropModal = document.getElementById('cropModal');
-    const cropImageElement = document.getElementById('cropImage');
-
-    function handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+    files.forEach(file => {
+      if (selectedFiles.length < 3) {
+        selectedFiles.push(file);
 
         const reader = new FileReader();
-        reader.onload = function (e) {
-            openCropModal(e.target.result);
+        reader.onload = function(e) {
+          const preview = document.createElement('div');
+          preview.className = 'relative';
+          preview.innerHTML = `
+            <img src="${e.target.result}" class="w-24 h-24 object-cover rounded" />
+            <button type="button" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center" data-index="${selectedFiles.length - 1}">×</button>
+          `;
+          imagePreview.appendChild(preview);
+
+          preview.querySelector('button').addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            selectedFiles.splice(index, 1);
+            preview.remove();
+            updateImageCount();
+            imagePreview.querySelectorAll('button').forEach((btn, idx) => {
+              btn.dataset.index = idx;
+            });
+          });
         };
         reader.readAsDataURL(file);
+      }
+    });
+
+    updateImageCount();
+
+    if (selectedFiles.length >= 3) {
+      imageInput.value = '';
+    }
+  });
+
+  function updateImageCount() {
+    imageCount.textContent = `${selectedFiles.length}/3 images selected`;
+    imageInput.disabled = selectedFiles.length >= 3;
+  }
+
+  // Form submission
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const description = descriptionInput.value.trim();
+    if (description.length < 10 || description.length > 25) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Description must be between 10 and 25 characters'
+      });
+      return;
     }
 
-    function openCropModal(imageUrl) {
-        cropImageElement.src = imageUrl;
-        cropModal.classList.remove('hidden');
-
-        cropImageElement.onload = () => {
-            cropper = new Cropper(cropImageElement, {
-                aspectRatio: 1, // square crop
-                viewMode: 1,
-                movable: true,
-                zoomable: true,
-                rotatable: true,
-                scalable: true,
-            });
-        };
+    if (selectedFiles.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please select at least one image.',
+      });
+      return;
     }
 
-    function closeCropModal() {
-        if (cropper) {
-            cropper.destroy();
-            cropper = null;
-        }
-        cropModal.classList.add('hidden');
+    const formData = new FormData();
+
+    // Add text fields
+    formData.append('productName', form.querySelector('[name="productName"]').value);
+    formData.append('categoriesId', form.querySelector('[name="categoriesId"]').value);
+    formData.append('color', form.querySelector('[name="color"]').value);
+    formData.append('description', description);
+    formData.append('price', form.querySelector('[name="price"]').value);
+    formData.append('stock', form.querySelector('[name="stock"]').value);
+
+    // Crop and add images
+    for (const file of selectedFiles) {
+      const base64 = await readFileAsDataURL(file);
+      const cropped = await cropImage(base64);
+      const blob = await (await fetch(cropped)).blob();
+      formData.append('images', blob, file.name);
     }
 
-    function cropAndSave() {
-        if (!cropper) return;
+    try {
+      const response = await fetch('/admin/add-product', {
+        method: 'POST',
+        body: formData
+      });
 
-        const canvas = cropper.getCroppedCanvas({
-            width: 300,
-            height: 300,
+      const data = await response.json();
+
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: data.message || 'Product added successfully!',
+        }).then(() => {
+          selectedFiles = [];
+          form.reset();
+          imagePreview.innerHTML = '';
+          updateImageCount();
+          toggleModal();
+          location.reload();
         });
-
-        const croppedImageURL = canvas.toDataURL('image/png');
-
-        // 👇 Optional Preview (or you can upload this to backend)
-        const preview = document.createElement('img');
-        preview.src = croppedImageURL;
-        preview.className = "w-40 h-40 rounded-full mt-4 mx-auto border-4 border-blue-300";
-        document.body.appendChild(preview);
-
-        closeCropModal();
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: data.message || 'Something went wrong!',
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Unexpected error occurred. Please try again.',
+      });
     }
-  </script>
-  <!-- Include JavaScript logic for modal, cropper, form submission, and deletion -->
-  
+  });
+
+  function readFileAsDataURL(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Simple center crop
+  async function cropImage(imageUrl) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = imageUrl;
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 300;
+        canvas.height = 300;
+
+        const size = Math.min(img.width, img.height);
+        const x = (img.width - size) / 2;
+        const y = (img.height - size) / 2;
+
+        ctx.drawImage(img, x, y, size, size, 0, 0, 300, 300);
+        const croppedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+        resolve(croppedBase64);
+      };
+    });
+  }
+</script>
+
 </body>
 </html>
 
