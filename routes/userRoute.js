@@ -2,7 +2,7 @@ import { Router } from "express";
 import authController from "../controller/user/signupController.js"; 
 import otpController from "../controller/user/otpController.js";
 import userMiddleware from "../middlewares/userMiddleware.js";
-
+import productController from "../controller/user/productController.js";
 
 
 const route = Router();
@@ -41,6 +41,9 @@ route.get('/auth/google/callback', authController.getGoogleCallback);
 
 route.post("/logout", authController.getLogout)
 
+//////////////////////////////////////////////////////
+
+route.get('/product', productController.getProduct);
 
     
 export default route; 

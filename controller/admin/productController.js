@@ -144,7 +144,11 @@ const upload = multer({ dest: "uploads/" });
 const updateProduct = async (req, res) => {
   try {
     const productId = req.params.id;
-    const { productName, categoriesId, color, description, price, stock, croppedImages } = req.body;
+    const { productName, categoriesId, color, description, price, stock } = req.body;
+    const files = req.files;
+    
+    console.log('Files received:', files);
+    console.log('Request body:', req.body);
 
     if (!productName || !categoriesId || !color || !description || !price || !stock) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -171,24 +175,79 @@ const updateProduct = async (req, res) => {
       return res.status(400).json({ message: 'A product with this name already exists' });
     }
 
-    // Handle image updates
-    let imageUrls = [];
-    if (croppedImages && croppedImages.length > 0) {
-      // Upload new images to Cloudinary
-      for (const base64Image of croppedImages) {
-        if (base64Image) {
-          try {
-            const result = await cloudinary.uploader.upload(base64Image, {
-              folder: 'products'
-            });
-            imageUrls.push(result.secure_url);
-          } catch (error) {
-            console.error('Error uploading image to Cloudinary:', error);
-            return res.status(500).json({ message: 'Error uploading images' });
+    // Get the current product to maintain existing images
+    const currentProduct = await Product.findById(productId);
+    if (!currentProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    let imageUrls = [...(currentProduct.imageUrl || [])];
+    console.log('Current image URLs:', imageUrls);
+
+    // Handle new image uploads
+    if (files && files.length > 0) {
+      console.log('Processing new files:', files.length);
+      
+      for (const file of files) {
+        try {
+          console.log('Processing file:', file.originalname);
+          
+          // Get the index of the image being updated from the file name
+          const fileIndex = parseInt(file.originalname.split('-')[1]);
+          console.log('File index:', fileIndex);
+          
+          if (!isNaN(fileIndex) && fileIndex >= 0 && fileIndex < 3) {
+            // Delete the old image from Cloudinary if it exists
+            if (imageUrls[fileIndex]) {
+              try {
+                console.log('Deleting old image:', imageUrls[fileIndex]);
+                const publicId = imageUrls[fileIndex].split('/').pop().split('.')[0];
+                await cloudinary.uploader.destroy(`products/${publicId}`);
+              } catch (error) {
+                console.error('Error deleting old image:', error);
+                // Continue with upload even if deletion fails
+              }
+            }
+
+            // Upload the new image
+            try {
+              console.log('Uploading new image to Cloudinary');
+              const result = await cloudinary.uploader.upload(file.path, {
+                folder: 'products',
+                resource_type: 'auto',
+                format: 'webp'
+              });
+              console.log('Cloudinary upload result:', result.secure_url);
+              imageUrls[fileIndex] = result.secure_url;
+            } catch (error) {
+              console.error('Error uploading image to Cloudinary:', error);
+              return res.status(500).json({ 
+                message: 'Error uploading image',
+                error: error.message 
+              });
+            }
+          } else {
+            console.log('Invalid file index or out of range');
           }
+        } catch (error) {
+          console.error('Error processing file:', error);
+          return res.status(500).json({ 
+            message: 'Error processing file',
+            error: error.message 
+          });
         }
       }
+    } else {
+      console.log('No new files to process');
     }
+
+    // Ensure we have exactly 3 image URLs
+    while (imageUrls.length < 3) {
+      imageUrls.push('');
+    }
+    imageUrls = imageUrls.slice(0, 3);
+
+    console.log('Final image URLs:', imageUrls);
 
     // Update product
     const updateData = {
@@ -197,31 +256,41 @@ const updateProduct = async (req, res) => {
       color,
       description,
       price: parseFloat(price),
-      stock: parseInt(stock)
+      stock: parseInt(stock),
+      imageUrl: imageUrls
     };
 
-    // Only update imageUrls if new images were uploaded
-    if (imageUrls.length > 0) {
-      updateData.imageUrl = imageUrls;
-    }
+    
 
+    // Update the product document
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      updateData,
-      { new: true }
+      { $set: updateData },
+      { new: true, runValidators: true }
     );
 
     if (!updatedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
+    // Verify the update was successful
+    const verifiedProduct = await Product.findById(productId);
+    console.log('Verified product after update:', verifiedProduct);
+
+    if (!verifiedProduct) {
+      return res.status(500).json({ message: 'Failed to verify product update' });
+    }
+
     res.status(200).json({ 
       message: 'Product updated successfully',
-      product: updatedProduct
+      product: verifiedProduct
     });
   } catch (error) {
     console.error('Error updating product:', error);
-    res.status(500).json({ message: 'Error updating product' });
+    res.status(500).json({ 
+      message: 'Error updating product',
+      error: error.message 
+    });
   }
 }
 
@@ -241,6 +310,8 @@ const deleteProduct = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
+
+
 
 export default {
   getProduct, 

@@ -6,7 +6,7 @@ import userController from "../controller/admin/userController.js";
 import categoryController from "../controller/admin/categoryController.js";
 import productController from "../controller/admin/productController.js";
 import orderController from "../controller/admin/orderController.js";
-import { upload, storage } from "../utils/multer.js";
+import { upload, storage, handleMulterError } from "../utils/multer.js";
 
 const router = express.Router();
 
@@ -35,7 +35,7 @@ router.patch("/hide-category/:id", categoryController.hideCategory);
 router.get("/products", productController.getProduct);
 router.post("/add-product", upload.array("images", 3), productController.addProduct);
 router.get("/edit-product/:id", productController.productUpdate);
-router.put("/edit-product/:id", upload.array("images", 3), productController.updateProduct);
+router.post("/edit-product/:id", upload.array("images", 3), handleMulterError, productController.updateProduct);
 router.delete("/delete-product/:id", productController.deleteProduct);
 
 // Orders

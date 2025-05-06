@@ -15,12 +15,38 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'ecommerce/products',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-    transformation: [{ width: 300, height: 300, crop: 'limit' }],
+    folder: 'products',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'avif'],
+    transformation: [{ width: 500, height: 500, crop: 'limit' }],
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept only image files
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
+    }
+  }
+});
 
-export { upload, storage, cloudinary };  // Named exports
+// Error handling middleware
+const handleMulterError = (err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: 'File size too large. Maximum size is 5MB.' });
+    }
+    return res.status(400).json({ message: err.message });
+  } else if (err) {
+    return res.status(400).json({ message: err.message });
+  }
+  next();
+};
+
+export { upload, storage, cloudinary, handleMulterError };  // Named exports
