@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .gradient-bg {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+    .input-focus {
+      transition: all 0.3s ease;
+    }
+    .input-focus:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .hover-scale {
+      transition: transform 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.02);
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-zinc-900 p-5 shadow-lg flex flex-col">
+      <div class="flex items-center justify-center mb-8">
+        <h1 class="text-white font-bold text-2xl">ELITECART</h1>
+      </div>
+      <nav class="space-y-4">
+        <a href="/admin/dashboard" class="block text-gray-400 hover:text-white px-4 py-2 rounded-lg transition">Dashboard</a>
+        <a href="/admin/products" class="block text-gray-400 hover:text-white px-4 py-2 rounded-lg transition">Products</a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 p-10">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex items-center justify-between mb-8">
+          <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Add New Product</h1>
+          <a href="/admin/products" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded-full transition-all duration-300 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to Products
+          </a>
+        </div>
+
+        <form id="addProductForm" enctype="multipart/form-data" class="space-y-8 bg-zinc-900 p-8 rounded-2xl shadow-xl border border-gray-800">
+          <!-- Column Labels -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-2">
+              <h2 class="text-xl font-semibold text-blue-400 mb-4">Product Information</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Product Name</label>
+                  <input type="text" name="productName" placeholder="Enter product name" class="w-full rounded-xl px-4 py-3 bg-gray-800 border border-gray-700 text-white input-focus focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"/>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Category</label>
+                  <select name="categoriesId" class="w-full rounded-xl px-4 py-3 bg-gray-800 border border-gray-700 text-white input-focus focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    <option value="">Select a category</option>
+                    <% categories.forEach(category => { %>
+                      <option value="<%= category._id %>"><%= category.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Company</label>
+                  <select name="companyId" class="w-full rounded-xl px-4 py-3 bg-gray-800 border border-gray-700 text-white input-focus focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    <option value="">Select a company</option>
+                    <% companies.forEach(company => { %>
+                      <option value="<%= company._id %>"><%= company.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Price</label>
+                  <input type="number" name="price" placeholder="Enter price" class="w-full rounded-xl px-4 py-3 bg-gray-800 border border-gray-700 text-white input-focus focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"/>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Stock</label>
+                  <input type="number" name="stock" placeholder="Enter stock quantity" class="w-full rounded-xl px-4 py-3 bg-gray-800 border border-gray-700 text-white input-focus focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"/>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Color</label>
+                  <input type="text" name="color" placeholder="Enter color" class="w-full rounded-xl px-4 py-3 bg-gray-800 border border-gray-700 text-white input-focus focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <h2 class="text-xl font-semibold text-blue-400 mb-4">Product Media</h2>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Main Cover Image</label>
+                  <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-700 border-dashed rounded-xl hover:border-blue-500 transition-colors duration-300">
+                    <div class="space-y-1 text-center">
+                      <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      <div class="flex text-sm text-gray-400">
+                        <label for="coverInput" class="relative cursor-pointer bg-gray-800 rounded-md font-medium text-blue-500 hover:text-blue-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                          <span>Upload a file</span>
+                          <input type="file" accept="image/*" id="coverInput" class="sr-only">
+                        </label>
+                        <p class="pl-1">or drag and drop</p>
+                      </div>
+                      <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+                  </div>
+                  <div id="coverPreview" class="mt-4"></div>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Sub Images (max 4)</label>
+                  <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-700 border-dashed rounded-xl hover:border-blue-500 transition-colors duration-300">
+                    <div class="space-y-1 text-center">
+                      <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                      <div class="flex text-sm text-gray-400">
+                        <label for="subImageInput" class="relative cursor-pointer bg-gray-800 rounded-md font-medium text-blue-500 hover:text-blue-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                          <span>Upload files</span>
+                          <input type="file" accept="image/*" id="subImageInput" multiple class="sr-only">
+                        </label>
+                        <p class="pl-1">or drag and drop</p>
+                      </div>
+                      <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+                  </div>
+                  <div id="subPreview" class="flex gap-4 flex-wrap mt-4"></div>
+                  <p class="text-sm text-gray-400 mt-2" id="subCount">0/4 images selected</p>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-400 mb-2">Description</label>
+                  <textarea name="description" placeholder="Enter product description" rows="4" class="w-full rounded-xl px-4 py-3 bg-gray-800 border border-gray-700 text-white input-focus focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-4 pt-6 border-t border-gray-800">
+            <a href="/admin/products" class="px-6 py-3 rounded-xl bg-gray-800 text-white hover:bg-gray-700 transition-all duration-300 flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+              Cancel
+            </a>
+            <button type="submit" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-300 flex items-center gap-2 hover-scale">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+              Add Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Crop Modal -->
+  <div id="cropModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
+    <div class="bg-gray-900 p-6 rounded-2xl max-w-xl w-full border border-gray-800">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-white">Crop Image</h2>
+        <button onclick="closeCropModal()" class="text-gray-400 hover:text-white text-2xl font-bold transition-colors">&times;</button>
+      </div>
+      <div class="w-full h-96">
+        <img id="cropImage" class="max-h-full w-full object-contain" />
+      </div>
+      <div class="text-center mt-4">
+        <button onclick="cropAndSave()" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-300">Crop & Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const coverInput = document.getElementById('coverInput');
+    const subInput = document.getElementById('subImageInput');
+    const coverPreview = document.getElementById('coverPreview');
+    const subPreview = document.getElementById('subPreview');
+    const subCount = document.getElementById('subCount');
+    const cropModal = document.getElementById('cropModal');
+    const cropImage = document.getElementById('cropImage');
+    let cropper, currentFile, isCover = false;
+
+    let croppedCover = null;
+    let croppedSubs = [];
+
+    coverInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      isCover = true;
+      openCropper(file);
+      coverInput.value = '';
+    });
+
+    subInput.addEventListener('change', e => {
+      const files = Array.from(e.target.files);
+      const remaining = 4 - croppedSubs.length;
+      if (files.length > remaining) {
+        Swal.fire("Limit Exceeded", `You can only upload ${remaining} more sub images.`, "warning");
+        return;
+      }
+
+      const file = files.shift();
+      if (file) {
+        isCover = false;
+        currentFile = file;
+        openCropper(file);
+      }
+      subInput.value = '';
+    });
+
+    function openCropper(file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        cropImage.src = e.target.result;
+        cropModal.classList.remove('hidden');
+
+        cropper = new Cropper(cropImage, {
+          aspectRatio: 1,
+          viewMode: 1,
+          autoCropArea: 1
+        });
+
+        currentFile = file;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function closeCropModal() {
+      cropModal.classList.add('hidden');
+      cropper?.destroy();
+    }
+
+    function cropAndSave() {
+      cropper.getCroppedCanvas({
+        width: 300,
+        height: 300
+      }).toBlob(blob => {
+        const imgURL = URL.createObjectURL(blob);
+        const imgElem = document.createElement('img');
+        imgElem.src = imgURL;
+        imgElem.className = "w-24 h-24 object-cover rounded";
+
+        if (isCover) {
+          croppedCover = blob;
+          coverPreview.innerHTML = '';
+          coverPreview.appendChild(imgElem);
+        } else {
+          croppedSubs.push(blob);
+          subPreview.appendChild(imgElem);
+          subCount.textContent = `${croppedSubs.length}/4 images selected`;
+        }
+
+        closeCropModal();
+      }, 'image/jpeg', 0.9);
+    }
+
+    document.getElementById('addProductForm').addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const form = e.target;
+      const description = form.querySelector('textarea[name="description"]').value.trim();
+
+      if (!croppedCover) {
+        Swal.fire("Missing Cover", "Please upload and crop a main cover image.", "error");
+        return;
+      }
+
+      if (croppedSubs.length === 0) {
+        Swal.fire("Missing Sub Images", "Please upload at least one sub image.", "error");
+        return;
+      }
+
+      if (description.length < 10) {
+        Swal.fire("Invalid Description", "Description must be at least 10 characters.", "error");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("productName", form.productName.value);
+      formData.append("categoriesId", form.categoriesId.value);
+      formData.append("companyId", form.companyId.value);
+      formData.append("price", form.price.value);
+      formData.append("stock", form.stock.value);
+      formData.append("color", form.color.value);
+      formData.append("description", description);
+      formData.append("coverImage", croppedCover, "cover.jpg");
+
+      croppedSubs.forEach((blob, index) => {
+        formData.append("subImages", blob, `sub${index}.jpg`);
+      });
+
+      try {
+        const res = await fetch('/admin/add-product', {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        if (res.ok) {
+          Swal.fire("Success", data.message || "Product added!", "success").then(() => {
+            window.location.href = "/admin/products";
+          });
+        } else {
+          throw new Error(data.message || "Failed to add product");
+        }
+      } catch (err) {
+        Swal.fire("Error", err.message, "error");
+      }
+    });
+  </script>
+</body>
+</html>

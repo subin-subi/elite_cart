@@ -17,6 +17,11 @@ const productSchema = new mongoose.Schema({
         ref: "Category",
         required: true,
     },
+    companyId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Company",
+        required: true,
+    },
     color: {
         type: String,
         required: true
@@ -25,8 +30,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minLength: 10,
-        maxLength: 25
+        minLength: 10
     },
     price: {
         type: Number,
@@ -44,25 +48,19 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
-    imageUrl: [String],
-    
-    offer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Offer'
-    },
-    offerPrice: {
-        type: Number,
-        min: 0
-    },
-    offerApplied: {
-        type: Boolean,
-        default: false
-    },
-    offerType: {
-        type: String,
-        enum: ['product', 'category', 'none'],
-        default: 'none'
+    media: {
+        coverImage: {
+            type: String,
+            required: true
+        },
+        subimage: [{
+            type: String,
+            required: true,
+            default: []
+        }]
     }
+    
+    
 }, 
 { timestamps: true });
 

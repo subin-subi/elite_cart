@@ -189,10 +189,22 @@ const verifyForgotPasswordOTP = async (req, res) => {
         res.status(500).json({ message: 'Failed to verify OTP' });
     }
 };
+const aboutPage = async (req, res) => {
+    try {
+      res.render("user/about");
+    } catch (error) {
+      console.error("Error rendering About page:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  };
+  
+  
+  
 
 export default {
     validateOTP,
     resendOTP,
     sendForgotPasswordOTP,
     verifyForgotPasswordOTP,
+    aboutPage
 }

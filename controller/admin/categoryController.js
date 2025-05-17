@@ -178,7 +178,7 @@ const hideCategory = async (req, res) => {
 const archivedCategory = async (req, res) => {
     try{
     const categories = await Category.find({ isHidden: true }).sort({ createdAt: -1 });
-    res.render('admin/archived-category', { categories });
+    res.render('admin/archived-things', { categories });
 }
 catch(error){
     console.error("Error fetching categories:", error);

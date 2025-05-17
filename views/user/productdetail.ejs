@@ -1,0 +1,83 @@
+<%- include('../../views/partials/nav') %>
+
+<div class="container mx-auto px-4 py-6">
+  <a href="/products" class="text-blue-600 hover:underline mb-4 inline-block">← Back</a>
+
+  <!-- Product Card -->
+  <div class="flex flex-col md:flex-row gap-6">
+    <div class="md:w-1/2">
+      <div class="border rounded-lg shadow-lg p-4">
+        <div class="h-64 w-full overflow-hidden rounded">
+          <img src="<%= product.media.coverImage %>" 
+               alt="<%= product.productName %>" 
+               class="h-full w-full object-cover" />
+        </div>
+        <div class="flex gap-2 mt-4">
+          <% if (product.media && product.media.subimage && product.media.subimage.length > 0) { %>
+            <% product.media.subimage.forEach(img => { %>
+              <img src="<%= img %>" alt="<%= product.productName %>" class="w-20 h-20 object-cover rounded cursor-pointer border hover:border-orange-500">
+            <% }) %>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="md:w-1/2">
+      <div class="border rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold mb-2"><%= product.productName %></h1>
+        <p class="text-lg text-orange-600 font-semibold mb-2">₹<%= product.price.toLocaleString() %></p>
+        <p class="text-gray-600 mb-4">By <%= product.companyId.name %></p>
+        <button class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded">Buy Now</button>
+        <div class="mt-6">
+          <h2 class="text-xl font-bold mb-3">Details</h2>
+          <p class="text-gray-700"><%= product.details %></p>
+        </div>
+        <div class="mt-4">
+          <h2 class="text-xl font-bold mb-3">Category</h2>
+          <p class="text-gray-700"><%= product.categoriesId.name %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products by Category -->
+  <div class="mt-12">
+    <h2 class="text-xl font-bold mb-3">More in <%= product.categoriesId.name %></h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <% if (relatedByCategory && relatedByCategory.length > 0) { %>
+        <% relatedByCategory.forEach(item => { %>
+          <div class="border rounded shadow p-3">
+            <img src="<%= item.media.coverImage %>" alt="<%= item.productName %>" class="w-full h-48 object-cover rounded mb-2">
+            <h3 class="text-lg font-semibold"><%= item.productName %></h3>
+            <p class="text-orange-600 font-medium">₹<%= item.price.toLocaleString() %></p>
+            <p class="text-gray-600 text-sm">By <%= item.companyId.name %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="text-gray-500">No related products found in this category.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Products from Same Company -->
+  <div class="mt-12">
+    <h2 class="text-xl font-bold mb-3">More from <%= product.companyId.name %></h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <% if (relatedByCompany && relatedByCompany.length > 0) { %>
+        <% relatedByCompany.forEach(item => { %>
+          <div class="border rounded shadow p-3">
+            <img src="<%= item.media.coverImage %>" alt="<%= item.productName %>" class="w-full h-48 object-cover rounded mb-2">
+            <h3 class="text-lg font-semibold"><%= item.productName %></h3>
+            <p class="text-orange-600 font-medium">₹<%= item.price.toLocaleString() %></p>
+            <p class="text-gray-600 text-sm">Category: <%= item.categoriesId.name %></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="text-gray-500">No other products found from this company.</p>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../../views/partials/footer') %>

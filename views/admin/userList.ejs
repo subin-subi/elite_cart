@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User List | Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Joan&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-    <aside class="fixed top-0 left-0 w-64 h-full bg-zinc-900 p-5 shadow-lg">
-        <div class="flex items-center justify-center mb-8">
-            <h1 class="admin-logo text-white font-bold text-2xl">ELITECART</h1>
-        </div>
-        <nav class="space-y-4">
-            <a href="/admin/dashboard" class="flex items-center text-gray-400 hover:text-white px-4 py-2 rounded-lg transition">Dashboard</a>
-            <a href="/admin/users" class="flex items-center text-white bg-zinc-800 px-4 py-2 rounded-lg transition">Customers</a>
-        </nav>
-    </aside>
+    <%- include('../partials/sidebar') %>
+
+        
     <div class="ml-64 p-8">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-2xl font-bold text-gray-700 mb-4">User List</h2>

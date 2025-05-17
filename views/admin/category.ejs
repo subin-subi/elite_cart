@@ -6,17 +6,12 @@
     <title>Category Management | Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Joan&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-    <aside class="fixed top-0 left-0 w-64 h-full bg-zinc-900 p-5 shadow-lg">
-        <div class="flex items-center justify-center mb-8">
-            <h1 class="text-white font-bold text-2xl">ELITECART</h1>
-        </div>
-        <nav class="space-y-4">
-            <a href="/admin/dashboard" class="block text-gray-400 hover:text-white px-4 py-2 rounded-lg transition">Dashboard</a>
-            <a href="/admin/categories" class="block text-white bg-zinc-800 px-4 py-2 rounded-lg">Categories</a>
-        </nav>
-    </aside>
+    <%- include('../partials/sidebar', { path: '/admin/category' }) %>
+    
     
     <div class="ml-64 p-8">
         <div class="bg-white p-6 rounded-lg shadow-md">

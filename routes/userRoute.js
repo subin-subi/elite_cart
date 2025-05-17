@@ -23,6 +23,8 @@ route.post("/login",authController.postLogin)
 
 route.get("/home",  authController.homepage)
 
+route.get("/about", otpController.aboutPage)
+
 route.get('/forgot-password', authController.getForgotPassword)
 
 route.post("/forgot-password/send-otp", otpController.sendForgotPasswordOTP)
@@ -45,7 +47,8 @@ route.post("/logout", authController.getLogout)
 
 route.get('/product', productController.getProduct);
 
-    
+route.get("/productdetail/:id", productController.getProductDetail);
+
 export default route; 
 
 
